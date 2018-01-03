@@ -2,7 +2,8 @@ import React from "react";
 import Dropzone from "react-dropzone";
 import moment from "moment";
 import { connect } from 'react-redux';
-import  { setFileDetails, removeImage } from "../actions/index.jsx";
+import  { setFileDetails, removeImage, showCroppedImage } from "../actions/index.jsx";
+import {Cropper} from 'react-image-cropper';
 
 class Upload extends React.Component {
   constructor(props){
@@ -22,18 +23,17 @@ class Upload extends React.Component {
   removeImages(data, el, index){console.log("inside remove", el);
      this.props.removeImage(el);
   }
-  render() {
-  let mydropzone = {
-          maxFiles: 1,
-          maxFilesize: 10, //mb
-          acceptedFiles: 'image/*',
-          addRemoveLinks: true,
-          autoProcessQueue: false,// used for stopping auto processing uploads
-          autoDiscover: false,
-          paramName: 'prod_pic',
-          previewsContainer: '.img-wrap', //used for specifying the previews div
-          clickable: true
+
+
+
+  cropImage(data, el, index){
+    let src = this.refs.cropper.crop();console.log("src", src);
+    let values = this.refs.cropper.values();console.log("values", values);
+  //  this.props.showCroppedImage({"src": srcvalues});
   }
+
+  render() {
+
     let files_uploaded = null;
     let style =
     {
@@ -49,10 +49,12 @@ class Upload extends React.Component {
     {
       if(this.props.files!==undefined){
          files_uploaded = this.props.files.map((el, i) => {
-          console.log("jjjjjjj", el[0].type.substring(0,5));
+          // console.log("jjjjjjj", el[0].type.substring(0,5));
               return (<div className="img-wrap" key={i}>
                     <span className="close"  onClick={this.removeImages.bind(this, el, i)}>&times;</span>
-                    <img src={el[0].preview}  style={image_style} />
+
+                    <Cropper src={el[0].preview} ref="cropper" style={image_style}/>
+                    <button type="button" onClick={this.cropImage.bind(this,el, i)}> crop</button>
                     </div>);
         });
       }
@@ -87,4 +89,4 @@ function mapStateToProps(state)
   }
 }
 
-export default connect(mapStateToProps, { setFileDetails, removeImage })(Upload);
+export default connect(mapStateToProps, { setFileDetails, removeImage, showCroppedImage })(Upload);

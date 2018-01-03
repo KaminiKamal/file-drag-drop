@@ -1,4 +1,4 @@
-import { FILE_ARRAY, REMOVE_FILE } from "../constants/index.jsx";
+import { FILE_ARRAY, REMOVE_FILE, CROPPED_IMAGE } from "../constants/index.jsx";
 
 export function setFileDetails(files)
 {
@@ -13,7 +13,18 @@ export function removeImage(index)
 {
   const action = {
     type: REMOVE_FILE,
-    index 
+    index
   }
   return action;
+}
+
+export function showCroppedImage(data){
+
+const action =
+{
+  type: CROPPED_IMAGE,
+  src : data,
+  values : data
+}
+
 }
